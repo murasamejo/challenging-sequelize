@@ -17,23 +17,25 @@ const sequelize = new Sequelize(
   }
 );
 
-sequelize
-  .authenticate()
-  .then(() => {
-    console.log('Connection has been established successfully.');
-  })
-  .catch(err => {
-    console.error('Unable to connect to the database:', err);
-  });
-
 const Model = Sequelize.Model;
 class TargetTweet extends Model {}
-
 const { Op } = require('sequelize');
-const yahooDePuppeteer = async () => {
+
+(async () => {
   await TargetTweet.init(
     {
-      // ...
+      tweetObject: {
+        type: Sequelize.STRING,
+        field: 'tweet_object'
+      },
+      createdAt: {
+        type: Sequelize.DATE,
+        field: 'created_at'
+      },
+      updatedAt: {
+        type: Sequelize.DATE,
+        field: 'updated_at'
+      }
     },
     {
       modelName: 'targetTweet',
@@ -41,14 +43,20 @@ const yahooDePuppeteer = async () => {
       sequelize
     }
   );
-  const sqlResult = await TargetTweet.count({
+
+  const sqlCountResult = await TargetTweet.count({
     where: {
       id: {
         [Op.gt]: 100
       }
     }
   });
-  console.log(sqlResult);
-};
+  console.log(sqlCountResult);
 
-yahooDePuppeteer();
+  const sqlWhereResult = await TargetTweet.findAll({
+    where: {
+      id: 100
+    }
+  });
+  console.log(sqlWhereResult[0].createdAt);
+})();
