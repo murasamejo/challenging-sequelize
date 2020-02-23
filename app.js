@@ -25,3 +25,30 @@ sequelize
   .catch(err => {
     console.error('Unable to connect to the database:', err);
   });
+
+const Model = Sequelize.Model;
+class TargetTweet extends Model {}
+
+const { Op } = require('sequelize');
+const yahooDePuppeteer = async () => {
+  await TargetTweet.init(
+    {
+      // ...
+    },
+    {
+      modelName: 'targetTweet',
+      tableName: 'target_tweets',
+      sequelize
+    }
+  );
+  const sqlResult = await TargetTweet.count({
+    where: {
+      id: {
+        [Op.gt]: 100
+      }
+    }
+  });
+  console.log(sqlResult);
+};
+
+yahooDePuppeteer();
